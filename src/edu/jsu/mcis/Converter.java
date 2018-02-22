@@ -53,8 +53,37 @@ public class Converter {
             Iterator<String[]> iterator = full.iterator();
             
             JSONObject jsonObject = new JSONObject();
+            JSONArray colHeaders = new JSONArray();
+            JSONArray rowHeaders = new JSONArray();
+            JSONArray data = new JSONArray();
+            JSONArray dataRow;
+            String[] csvRow;
             
-            // INSERT YOUR CODE HERE
+            
+            /*This pulls the csv data out into an array called csvRow*/
+            csvRow = full.get(0);/*gets csvRow out of full array*/
+            for (int i = 0; i < csvRow.length; ++i){
+                colHeaders.add(csvRow[i]);
+            }
+            
+            for (int i = 1; i < full.size(); ++i){
+                csvRow = full.get(i);
+                rowHeaders.add(csvRow[0]);
+                dataRow = new JSONArray();
+                for (int j = 1; j < csvRow.length; ++j){
+                    dataRow.add(Integer.parseInt(csvRow[j]));
+                }
+                
+                data.add(dataRow);
+            }
+            jsonObject.put("colHeaders", colHeaders);
+            jsonObject.put("rowHeaders", rowHeaders);
+            jsonObject.put("data", data);
+            
+        
+        
+        
+            results = JSONValue.toJSONString(jsonObject); 
             
         }
         

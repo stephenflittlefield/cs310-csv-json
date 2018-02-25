@@ -62,6 +62,7 @@ public class Converter {
             
             /*This pulls the csv data out into an array called csvRow*/
             csvRow = full.get(0);/*gets csvRow out of full array*/
+            
             for (int i = 0; i < csvRow.length; ++i){
                 colHeaders.add(csvRow[i]);
             }
@@ -96,6 +97,11 @@ public class Converter {
     public static String jsonToCsv(String jsonString) {
         
         String results = "";
+        String[] csvRow;
+       
+        JSONArray colHeaders;
+        JSONArray rowHeaders;
+        JSONArray data;
         
         try {
             
@@ -105,7 +111,43 @@ public class Converter {
             StringWriter writer = new StringWriter();
             CSVWriter csvWriter = new CSVWriter(writer, ',', '"', '\n');
             
-            // INSERT YOUR CODE HERE
+            colHeaders = (JSONArray)jsonObject.get("colHeaders");
+            rowHeaders = (JSONArray)jsonObject.get("rowHeaders");
+            data = (JSONArray)jsonObject.get("data");
+            
+            csvRow = new String[colHeaders.size()];
+            
+            // Copy column headers
+            
+            for (int i = 0; i < colHeaders.size(); ++i){
+                String field = (String)colHeaders.get(i);
+                csvRow[i] = field;
+            }
+            
+            csvWriter.writeNext(csvRow); 
+            
+            // Copy row headers / data
+            
+            for (int i = 0; i < rowHeaders.size(); ++i) {
+                
+                csvRow = new String[colHeaders.size()];
+                
+                csvRow[0] = (String)rowHeaders.get(i);
+                
+                JSONArray dataRow = (JSONArray)data.get(i);
+                
+                for (int j = 0; j < dataRow.size(); ++j) {
+                    csvRow[j+1] = Long.toString((long) dataRow.get(j));
+                }
+                
+                csvWriter.writeNext(csvRow); 
+                
+                
+            }
+            
+            
+            
+            results = writer.toString(); 
             
         }
         
